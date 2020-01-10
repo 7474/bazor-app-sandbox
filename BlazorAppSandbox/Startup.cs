@@ -1,4 +1,4 @@
-using Koudenpa.Mackerel.Api.Api;
+using BlazorAppSandboxComponent;
 using Microsoft.AspNetCore.Components.Builder;
 using Microsoft.Extensions.DependencyInjection;
 
