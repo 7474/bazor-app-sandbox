@@ -1,0 +1,37 @@
+name: Publish pages
+
+on:
+  push:
+    branches:
+    - master
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v1
+    - name: Setup .NET Core
+      uses: actions/setup-dotnet@v1
+      with:
+        dotnet-version: 3.1
+    - name: Build
+      run: dotnet publish -c Release
+    - name: Clear dist
+      run: rm -rf ./docs
+    - name: Copy dist
+      run: mv ./bin/Release/netstandard2.1/publish/bazor-app-sandbox/dist ./docs
+    - name: Commit & Push
+      run: |
+        if [ -n "$(git status --porcelain)" ]; then
+          git config --global user.name "7474"
+          git config --global user.email "koudenpa@hotmail.com"
+          git add ./docs 
+          git commit -m 'Pulish pages.'
+          git remote set-url origin https://7474:${GITHUB_TOKEN}@github.com/7474/bazor-app-sandbox.git
+          git push
+        else
+          echo "No change"
+        fi
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
