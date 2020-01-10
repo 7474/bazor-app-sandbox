@@ -10,6 +10,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using BlazorAppSandboxServer.Data;
+using System.Net.Http;
 
 namespace BlazorAppSandboxServer
 {
@@ -29,6 +30,12 @@ namespace BlazorAppSandboxServer
             services.AddRazorPages();
             services.AddServerSideBlazor();
             services.AddSingleton<WeatherForecastService>();
+            // XXX Blazor WebAssembly とのコンポーネント共有試行の名残。 
+            // そもそもBlazor Serverホスティングする場合は自分が保有しているリソースは WeatherForecastService のように取るため自身への参照はない。
+            services.AddSingleton<HttpClient>(new HttpClient()
+            {
+                BaseAddress = Configuration.GetSection("Application").GetValue<Uri>("ApiBaseAddress"),
+            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
