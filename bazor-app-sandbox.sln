@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.29613.14
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "bazor-app-sandbox", "bazor-app-sandbox.csproj", "{9DE4CAEF-920F-49C3-B6E6-C2C5D518804E}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{9DE4CAEF-920F-49C3-B6E6-C2C5D518804E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9DE4CAEF-920F-49C3-B6E6-C2C5D518804E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9DE4CAEF-920F-49C3-B6E6-C2C5D518804E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9DE4CAEF-920F-49C3-B6E6-C2C5D518804E}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {B0352309-810A-40AE-AC8F-04FBF3E5286B}
+	EndGlobalSection
+EndGlobal
