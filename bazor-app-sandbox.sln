@@ -17,7 +17,9 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "GitHub Actions", "GitHub Ac
 		.github\workflows\publish-pages.yml = .github\workflows\publish-pages.yml
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BlazorAppSandboxComponent", "BlazorAppSandboxComponent\BlazorAppSandboxComponent.csproj", "{391BE19D-9649-4314-BE56-BC08EB774899}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BlazorAppSandboxComponent", "BlazorAppSandboxComponent\BlazorAppSandboxComponent.csproj", "{391BE19D-9649-4314-BE56-BC08EB774899}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BlazorAppSandboxServer", "BlazorAppSandboxServer\BlazorAppSandboxServer.csproj", "{C4DF0F4F-B208-4958-83FB-478E4BE8C468}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -37,6 +39,10 @@ Global
 		{391BE19D-9649-4314-BE56-BC08EB774899}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{391BE19D-9649-4314-BE56-BC08EB774899}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{391BE19D-9649-4314-BE56-BC08EB774899}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C4DF0F4F-B208-4958-83FB-478E4BE8C468}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C4DF0F4F-B208-4958-83FB-478E4BE8C468}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C4DF0F4F-B208-4958-83FB-478E4BE8C468}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C4DF0F4F-B208-4958-83FB-478E4BE8C468}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
