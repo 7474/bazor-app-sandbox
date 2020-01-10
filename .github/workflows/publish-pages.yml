@@ -32,6 +32,7 @@ jobs:
           echo "${ACTIONS_DEPLOY_KEY}" > "${SSH_DIR}/id_rsa"
           chmod 400 "${SSH_DIR}/id_rsa"
 
+          git remote set-url origin "git@github.com:${GITHUB_REPOSITORY}.git"
           git config --global user.name "7474"
           git config --global user.email "koudenpa@hotmail.com"
 
