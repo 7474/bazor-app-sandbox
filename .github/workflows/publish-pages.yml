@@ -38,7 +38,7 @@ jobs:
 
           git add ./docs
           git commit -m 'Pulish pages.'
-          git push origin HEAD
+          git push origin master
         else
           echo "No change"
         fi
