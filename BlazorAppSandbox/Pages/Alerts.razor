@@ -1,0 +1,45 @@
+﻿@page "/alerts"
+@using Koudenpa.Mackerel.Api.Model
+@inject HttpClient Http
+
+<h1>Mackerel alerts</h1>
+
+<p>This component demonstrates fetching data from the Mackerel API.</p>
+
+@if (alerts == null)
+{
+    <p><em>Loading...</em></p>
+}
+else
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th>OpenedAt</th>
+                <th>Message</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var alert in alerts)
+            {
+                <tr>
+                    <td>@alert.OpenedAt</td>
+                    <td>@alert.Message</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+
+@code {
+    private Alert[] alerts;
+
+    protected override async Task OnInitializedAsync()
+    {
+        // CORS の兼ね合いでブラウザからのリクエストは無理筋。
+        //AlertApi.Configuration.ApiKey.Add("X-Api-Key", "YOUR_API_KEY");
+        //alerts = (await AlertApi.GetAlertsAsync()).Alerts.ToArray();
+        Http.DefaultRequestHeaders.Add("X-Api-Key", "YOUR_API_KEY");
+        alerts = (await Http.GetJsonAsync<AlertsResponse>("https://api.mackerelio.com/api/v0" + "/alerts")).Alerts.ToArray();
+    }
+}
