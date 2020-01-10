@@ -23,17 +23,10 @@ jobs:
     - name: Copy dist
       run: mv ./bin/Release/netstandard2.1/publish/bazor-app-sandbox/dist ./docs
 
-    - name: Publish pages
-      uses: peaceiris/actions-gh-pages@v2
-      env:
-        ACTIONS_DEPLOY_KEY: ${{ secrets.ACTIONS_DEPLOY_KEY }}
-        PUBLISH_BRANCH: master
-        PUBLISH_DIR: ./docs
-
     - name: Commit & Push
       run: |
         if [ -n "$(git status --porcelain)" ]; then
-          SSH_DIR="/root/.ssh"
+          SSH_DIR="${HOME}/.ssh"
           mkdir "${SSH_DIR}"
           ssh-keyscan -t rsa github.com > "${SSH_DIR}/known_hosts"
           echo "${ACTIONS_DEPLOY_KEY}" > "${SSH_DIR}/id_rsa"
