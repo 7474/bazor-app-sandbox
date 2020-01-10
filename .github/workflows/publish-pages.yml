@@ -1,4 +1,4 @@
-name: Publish pages
+name: Publish Blazor Application
 
 on:
   push:
@@ -17,15 +17,15 @@ jobs:
       uses: actions/setup-dotnet@v1
       with:
         dotnet-version: '3.1.100'
-    - name: Build
-      run: dotnet publish -c Release
+    - name: Build Blazor Application
+      run: dotnet publish -c Release ./BlazorAppSandbox/bazor-app-sandbox.csproj
 
     - name: Clear dist
       run: rm -rf ./docs
     - name: Copy dist
-      run: mv ./bin/Release/netstandard2.1/publish/bazor-app-sandbox/dist ./docs
+      run: mv ./BlazorAppSandbox/bin/Release/netstandard2.1/publish/bazor-app-sandbox/dist ./docs
 
-    - name: Commit & Push
+    - name: Deploy Pages
       run: |
         if [ -n "$(git status --porcelain)" ]; then
           SSH_DIR="${HOME}/.ssh"
