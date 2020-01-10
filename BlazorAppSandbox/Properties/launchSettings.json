@@ -17,6 +17,7 @@
     },
     "bazor-app-sandbox": {
       "commandName": "Project",
+      "commandLineArgs": "--pathbase=/bazor-app-sandbox",
       "launchBrowser": true,
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development"

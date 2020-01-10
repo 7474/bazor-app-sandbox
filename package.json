@@ -1,0 +1,26 @@
+{
+  "name": "bazor-app-sandbox",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "directories": {
+    "doc": "docs"
+  },
+  "scripts": {
+    "openapi-generator": "openapi-generator",
+    "gen-mackerel-client": "openapi-generator generate -i https://raw.githubusercontent.com/7474/open-api-spec-sandbox/master/mackerel/mackerel-api.yml -g csharp-netcore -o ./mackerel-client --additional-properties targetFramework=netstandard2.0 --additional-properties packageGuid={5F13AFE9-A28D-434D-A0ED-67B87949333F} --package-name Koudenpa.Mackerel.Api"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/7474/bazor-app-sandbox.git"
+  },
+  "author": "",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/7474/bazor-app-sandbox/issues"
+  },
+  "homepage": "https://github.com/7474/bazor-app-sandbox#readme",
+  "devDependencies": {
+    "@openapitools/openapi-generator-cli": "^1.0.8-4.2.2"
+  }
+}
