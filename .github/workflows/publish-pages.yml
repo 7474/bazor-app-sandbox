@@ -29,3 +29,24 @@ jobs:
         ACTIONS_DEPLOY_KEY: ${{ secrets.ACTIONS_DEPLOY_KEY }}
         PUBLISH_BRANCH: master
         PUBLISH_DIR: ./docs
+
+    - name: Commit & Push
+      run: |
+        if [ -n "$(git status --porcelain)" ]; then
+          SSH_DIR="/root/.ssh"
+          mkdir "${SSH_DIR}"
+          ssh-keyscan -t rsa github.com > "${SSH_DIR}/known_hosts"
+          echo "${ACTIONS_DEPLOY_KEY}" > "${SSH_DIR}/id_rsa"
+          chmod 400 "${SSH_DIR}/id_rsa"
+
+          git config --global user.name "7474"
+          git config --global user.email "koudenpa@hotmail.com"
+
+          git add ./docs
+          git commit -m 'Pulish pages.'
+          git push origin HEAD
+        else
+          echo "No change"
+        fi
+      env:
+        ACTIONS_DEPLOY_KEY: ${{ secrets.ACTIONS_DEPLOY_KEY }}
