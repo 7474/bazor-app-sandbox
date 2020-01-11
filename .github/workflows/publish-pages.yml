@@ -39,7 +39,7 @@ jobs:
           git config --global user.email "koudenpa@hotmail.com"
 
           git add ./docs
-          git commit -m 'Pulish pages.'
+          git commit -m 'Pulish pages. [skip azpipelines]'
           git push origin HEAD:master
         else
           echo "No change"
