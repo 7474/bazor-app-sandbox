@@ -1,0 +1,30 @@
+﻿@inject Blazored.LocalStorage.ILocalStorageService LocalStorage
+
+<CascadingValue Value="@this">
+    @ChildContent
+</CascadingValue>
+
+@code {
+    // https://docs.microsoft.com/ja-jp/aspnet/core/blazor/state-management?view=aspnetcore-3.1#factor-out-the-state-preservation-to-a-common-location
+    // https://brianlagunas.com/lets-learn-blazor-managing-state-in-blazor-fail/
+    // https://github.com/Blazored/LocalStorage
+    public bool HasLoaded { get; set; }
+
+    [Parameter]
+    public RenderFragment ChildContent { get; set; }
+
+    public string MackerelApiKey { get; set; }
+
+    // https://github.com/Blazored/LocalStorage#usage-blazor-server
+    // > NOTE: Due to pre-rendering in Blazor Server you can't perform any JS interop until the OnAfterRender lifecycle method.
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        MackerelApiKey = await LocalStorage.GetItemAsync<string>("MackerelApiKey");
+        HasLoaded = true;
+    }
+
+    public async Task SaveChangesAsync()
+    {
+        await LocalStorage.SetItemAsync("MackerelApiKey", MackerelApiKey);
+    }
+}
