@@ -47,19 +47,33 @@ else
         </tbody>
     </table>
 }
+@if (!hasApiKey)
+{
+    <p>
+        Please set Mackerel API Key.
+        <NavLink class="nav-link" href="settings">Settings</NavLink>
+    </p>
+}
 
 @code {
+    [CascadingParameter]
+    private SettingsProvider SettingsProvider { get; set; }
+    private bool hasApiKey;
     private Alert[] alerts;
 
     protected override async Task OnInitializedAsync()
     {
         // CORS の兼ね合いでブラウザからのリクエストは無理筋。
-        var apiKey = "";
+        var apiKey = SettingsProvider.MackerelApiKey;
+        hasApiKey = !string.IsNullOrEmpty(apiKey);
+        if (hasApiKey)
+        {
+            //Http.DefaultRequestHeaders.Add("X-Api-Key", apiKey);
+            //alerts = (await Http.GetJsonAsync<AlertsResponse>("https://api.mackerelio.com/api/v0" + "/alerts")).Alerts.ToArray();
 
-        //Http.DefaultRequestHeaders.Add("X-Api-Key", apiKey);
-        //alerts = (await Http.GetJsonAsync<AlertsResponse>("https://api.mackerelio.com/api/v0" + "/alerts")).Alerts.ToArray();
-
-        MackerelClient.HttpClient.DefaultRequestHeaders.Add("X-Api-Key", apiKey);
-        alerts = (await MackerelClient.GetAlertsAsync(null, null, null)).Alerts.ToArray();
+            MackerelClient.HttpClient.DefaultRequestHeaders.Remove("X-Api-Key");
+            MackerelClient.HttpClient.DefaultRequestHeaders.Add("X-Api-Key", apiKey);
+            alerts = (await MackerelClient.GetAlertsAsync(null, null, null)).Alerts.ToArray();
+        }
     }
 }

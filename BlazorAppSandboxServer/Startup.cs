@@ -12,6 +12,7 @@ using Microsoft.Extensions.Hosting;
 using BlazorAppSandboxServer.Data;
 using System.Net.Http;
 using MackerelApi;
+using Blazored.LocalStorage;
 
 namespace BlazorAppSandboxServer
 {
@@ -30,6 +31,9 @@ namespace BlazorAppSandboxServer
         {
             services.AddRazorPages();
             services.AddServerSideBlazor();
+
+            services.AddBlazoredLocalStorage();
+
             services.AddSingleton<WeatherForecastService>();
             // XXX Blazor WebAssembly とのコンポーネント共有試行の名残。 
             // そもそもBlazor Serverホスティングする場合は自分が保有しているリソースは WeatherForecastService のように取るため自身への参照はない。

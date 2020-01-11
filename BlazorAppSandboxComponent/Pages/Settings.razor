@@ -1,0 +1,38 @@
+﻿@page "/settings"
+
+<h1>Settings</h1>
+
+@if (SettingsProvider.HasLoaded)
+{
+    <label>
+        Mackerel API Key
+        <input id="name" @bind="MackerelApiKey" />
+    </label>
+    <button class="btn btn-outline-dark" @onclick="Update">Update</button>
+}
+else
+{
+    <p>Loading...</p>
+}
+
+@code {
+    [CascadingParameter]
+    private SettingsProvider SettingsProvider { get; set; }
+
+    private string MackerelApiKey;
+
+    protected override void OnInitialized()
+    {
+        // XXX 読み込み完了とかどうハンドルするのか。
+        if (SettingsProvider.HasLoaded)
+        {
+            MackerelApiKey = SettingsProvider.MackerelApiKey;
+        }
+    }
+
+    private async Task Update()
+    {
+        SettingsProvider.MackerelApiKey = MackerelApiKey;
+        await SettingsProvider.SaveChangesAsync();
+    }
+}
