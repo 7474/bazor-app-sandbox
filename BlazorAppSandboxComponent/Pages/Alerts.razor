@@ -1,6 +1,7 @@
 ﻿@page "/alerts"
-@using Koudenpa.Mackerel.Api.Model
+@using MackerelApi
 @inject HttpClient Http
+@inject mackerel_apiClient MackerelClient
 
 <h1>Mackerel alerts</h1>
 
@@ -15,16 +16,32 @@ else
     <table class="table">
         <thead>
             <tr>
-                <th>OpenedAt</th>
+                <th>Id</th>
+                <th>Status</th>
+                <th>MonitorId</th>
+                <th>Type</th>
+                <th>HostId</th>
+                <th>Value</th>
                 <th>Message</th>
+                <th>Reason</th>
+                <th>OpenedAt</th>
+                <th>ClosedAt</th>
             </tr>
         </thead>
         <tbody>
             @foreach (var alert in alerts)
             {
                 <tr>
-                    <td>@alert.OpenedAt</td>
+                    <td>@alert.Id</td>
+                    <td>@alert.Status</td>
+                    <td>@alert.MonitorId</td>
+                    <td>@alert.Type</td>
+                    <td>@alert.HostId</td>
+                    <td>@alert.Value</td>
                     <td>@alert.Message</td>
+                    <td>@alert.Reason</td>
+                    <td>@alert.OpenedAt</td>
+                    <td>@alert.ClosedAt</td>
                 </tr>
             }
         </tbody>
@@ -37,9 +54,12 @@ else
     protected override async Task OnInitializedAsync()
     {
         // CORS の兼ね合いでブラウザからのリクエストは無理筋。
-        //AlertApi.Configuration.ApiKey.Add("X-Api-Key", "YOUR_API_KEY");
-        //alerts = (await AlertApi.GetAlertsAsync()).Alerts.ToArray();
-        Http.DefaultRequestHeaders.Add("X-Api-Key", "YOUR_API_KEY");
-        alerts = (await Http.GetJsonAsync<AlertsResponse>("https://api.mackerelio.com/api/v0" + "/alerts")).Alerts.ToArray();
+        var apiKey = "";
+
+        //Http.DefaultRequestHeaders.Add("X-Api-Key", apiKey);
+        //alerts = (await Http.GetJsonAsync<AlertsResponse>("https://api.mackerelio.com/api/v0" + "/alerts")).Alerts.ToArray();
+
+        MackerelClient.HttpClient.DefaultRequestHeaders.Add("X-Api-Key", apiKey);
+        alerts = (await MackerelClient.GetAlertsAsync(null, null, null)).Alerts.ToArray();
     }
 }

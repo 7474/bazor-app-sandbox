@@ -11,6 +11,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using BlazorAppSandboxServer.Data;
 using System.Net.Http;
+using MackerelApi;
 
 namespace BlazorAppSandboxServer
 {
@@ -32,10 +33,11 @@ namespace BlazorAppSandboxServer
             services.AddSingleton<WeatherForecastService>();
             // XXX Blazor WebAssembly とのコンポーネント共有試行の名残。 
             // そもそもBlazor Serverホスティングする場合は自分が保有しているリソースは WeatherForecastService のように取るため自身への参照はない。
-            services.AddSingleton<HttpClient>(new HttpClient()
+            services.AddScoped((provider) => new HttpClient()
             {
                 BaseAddress = Configuration.GetSection("Application").GetValue<Uri>("ApiBaseAddress"),
             });
+            services.AddScoped((provider) => new mackerel_apiClient(new HttpClient()));
             services.AddApplicationInsightsTelemetry();
         }
 
