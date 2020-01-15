@@ -63,8 +63,14 @@ else
 
     protected override async Task OnInitializedAsync()
     {
+        SettingsProvider.NotifyUpdate += QueryAlert;
+        await QueryAlert(SettingsProvider);
+    }
+
+    private async Task QueryAlert(SettingsProvider settings)
+    {
         // CORS の兼ね合いでブラウザからのリクエストは無理筋。
-        var apiKey = SettingsProvider.MackerelApiKey;
+        var apiKey = settings.MackerelApiKey;
         hasApiKey = !string.IsNullOrEmpty(apiKey);
         if (hasApiKey)
         {
@@ -74,6 +80,7 @@ else
             MackerelClient.HttpClient.DefaultRequestHeaders.Remove("X-Api-Key");
             MackerelClient.HttpClient.DefaultRequestHeaders.Add("X-Api-Key", apiKey);
             alerts = (await MackerelClient.GetAlertsAsync(null, null, null)).Alerts.ToArray();
+            StateHasChanged();
         }
     }
 }

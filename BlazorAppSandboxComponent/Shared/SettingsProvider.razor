@@ -15,16 +15,28 @@
 
     public string MackerelApiKey { get; set; }
 
+    public event Func<SettingsProvider, Task> NotifyUpdate;
+
     // https://github.com/Blazored/LocalStorage#usage-blazor-server
     // > NOTE: Due to pre-rendering in Blazor Server you can't perform any JS interop until the OnAfterRender lifecycle method.
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
         MackerelApiKey = await LocalStorage.GetItemAsync<string>("MackerelApiKey");
         HasLoaded = true;
+        await Notify();
     }
 
     public async Task SaveChangesAsync()
     {
         await LocalStorage.SetItemAsync("MackerelApiKey", MackerelApiKey);
+        await Notify();
+    }
+
+    private async Task Notify()
+    {
+        if (NotifyUpdate != null)
+        {
+            await NotifyUpdate.Invoke(this);
+        }
     }
 }
