@@ -75,9 +75,6 @@ else
         hasApiKey = !string.IsNullOrEmpty(apiKey);
         if (hasApiKey)
         {
-            //Http.DefaultRequestHeaders.Add("X-Api-Key", apiKey);
-            //alerts = (await Http.GetJsonAsync<AlertsResponse>("https://api.mackerelio.com/api/v0" + "/alerts")).Alerts.ToArray();
-
             MackerelClient.HttpClient.DefaultRequestHeaders.Remove("X-Api-Key");
             MackerelClient.HttpClient.DefaultRequestHeaders.Add("X-Api-Key", apiKey);
             alerts = (await MackerelClient.GetAlertsAsync(null, null, null)).Alerts.ToArray();
