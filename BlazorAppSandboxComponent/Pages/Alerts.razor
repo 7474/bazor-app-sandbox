@@ -2,6 +2,7 @@
 @using MackerelApi
 @inject HttpClient Http
 @inject mackerel_apiClient MackerelClient
+@implements IDisposable
 
 <h1>Mackerel alerts</h1>
 
@@ -82,5 +83,10 @@ else
             alerts = (await MackerelClient.GetAlertsAsync(null, null, null)).Alerts.ToArray();
             StateHasChanged();
         }
+    }
+
+    public void Dispose()
+    {
+        SettingsProvider.NotifyUpdate -= QueryAlert;
     }
 }
