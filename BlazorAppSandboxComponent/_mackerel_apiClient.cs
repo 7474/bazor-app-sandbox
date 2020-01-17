@@ -4,7 +4,10 @@ namespace MackerelApi
 {
     public partial class mackerel_apiClient
     {
-        // TODO HttpClientの公開ではなく認証情報の設定メソッドとする。
-        public HttpClient HttpClient { get { return _httpClient; } }
+        public void SetApiKey(string apiKey)
+        {
+            _httpClient.DefaultRequestHeaders.Remove("X-Api-Key");
+            _httpClient.DefaultRequestHeaders.Add("X-Api-Key", apiKey);
+        }
     }
 }

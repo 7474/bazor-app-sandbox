@@ -75,8 +75,7 @@ else
         hasApiKey = !string.IsNullOrEmpty(apiKey);
         if (hasApiKey)
         {
-            MackerelClient.HttpClient.DefaultRequestHeaders.Remove("X-Api-Key");
-            MackerelClient.HttpClient.DefaultRequestHeaders.Add("X-Api-Key", apiKey);
+            MackerelClient.SetApiKey(apiKey);
             alerts = (await MackerelClient.GetAlertsAsync(null, null, null)).Alerts.ToArray();
             await InvokeAsync(() =>
             {
