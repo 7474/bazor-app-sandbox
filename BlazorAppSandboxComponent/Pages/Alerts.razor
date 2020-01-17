@@ -81,7 +81,10 @@ else
             MackerelClient.HttpClient.DefaultRequestHeaders.Remove("X-Api-Key");
             MackerelClient.HttpClient.DefaultRequestHeaders.Add("X-Api-Key", apiKey);
             alerts = (await MackerelClient.GetAlertsAsync(null, null, null)).Alerts.ToArray();
-            StateHasChanged();
+            await InvokeAsync(() =>
+            {
+                StateHasChanged();
+            });
         }
     }
 
