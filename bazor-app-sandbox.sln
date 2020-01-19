@@ -5,8 +5,6 @@ VisualStudioVersion = 16.0.29613.14
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "bazor-app-sandbox", "BlazorAppSandbox\bazor-app-sandbox.csproj", "{9DE4CAEF-920F-49C3-B6E6-C2C5D518804E}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{9543E7D7-D5A5-4E2A-AD33-3FB3044D3FD6}"
-EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "GitHub Actions", "GitHub Actions", "{2B00872B-0D4B-4932-ADB9-E746D9783B51}"
 	ProjectSection(SolutionItems) = preProject
 		.github\workflows\publish-pages.yml = .github\workflows\publish-pages.yml
@@ -15,6 +13,8 @@ EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BlazorAppSandboxComponent", "BlazorAppSandboxComponent\BlazorAppSandboxComponent.csproj", "{391BE19D-9649-4314-BE56-BC08EB774899}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BlazorAppSandboxServer", "BlazorAppSandboxServer\BlazorAppSandboxServer.csproj", "{C4DF0F4F-B208-4958-83FB-478E4BE8C468}"
+EndProject
+Project("{151D2E53-A2C4-4D7D-83FE-D05416EBD58E}") = "BlazorSandboxServerAzureResource", "BlazorSandboxServerAzureResource\BlazorSandboxServerAzureResource.deployproj", "{4ADBB0C1-A95F-4FE9-9CA1-226C508E6271}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -34,6 +34,10 @@ Global
 		{C4DF0F4F-B208-4958-83FB-478E4BE8C468}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C4DF0F4F-B208-4958-83FB-478E4BE8C468}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C4DF0F4F-B208-4958-83FB-478E4BE8C468}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4ADBB0C1-A95F-4FE9-9CA1-226C508E6271}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4ADBB0C1-A95F-4FE9-9CA1-226C508E6271}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4ADBB0C1-A95F-4FE9-9CA1-226C508E6271}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4ADBB0C1-A95F-4FE9-9CA1-226C508E6271}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

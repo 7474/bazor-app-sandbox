@@ -1,0 +1,438 @@
+{
+  "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+    "sites_BlazorAppSandboxServer_name": {
+      "defaultValue": "BlazorAppSandboxServer",
+      "type": "String"
+    },
+    "components_BlazorAppSandboxServer_name": {
+      "defaultValue": "BlazorAppSandboxServer",
+      "type": "String"
+    },
+    "serverfarms_BlazorAppSandboxServerPlan_name": {
+      "defaultValue": "BlazorAppSandboxServerPlan",
+      "type": "String"
+    },
+    "SignalR_BlazorAppSandboxServerService_name": {
+      "defaultValue": "BlazorAppSandboxServerService",
+      "type": "String"
+    },
+    "smartdetectoralertrules_failure_anomalies___blazorappsandboxserver_name": {
+      "defaultValue": "failure anomalies - blazorappsandboxserver",
+      "type": "String"
+    },
+    "actiongroups_application_20insights_20smart_20detection_externalid": {
+      "defaultValue": "/subscriptions/902c2f70-8e50-4d9b-a2b2-4c285c48aad7/resourceGroups/japanisetextclassifierfunction/providers/microsoft.insights/actiongroups/application%20insights%20smart%20detection",
+      "type": "String"
+    }
+  },
+  "variables": {},
+  "resources": [
+    {
+      "type": "microsoft.insights/components",
+      "apiVersion": "2015-05-01",
+      "name": "[parameters('components_BlazorAppSandboxServer_name')]",
+      "location": "japaneast",
+      "tags": {
+        "hidden-link:/providers/Microsoft.Web/sites/BlazorAppSandboxServer": "Resource",
+        "hidden-link:/subscriptions/902c2f70-8e50-4d9b-a2b2-4c285c48aad7/resourceGroups/BlazorSandbox/providers/Microsoft.Web/sites/BlazorAppSandboxServer": "Resource"
+      },
+      "kind": "web",
+      "properties": {
+        "Application_Type": "web",
+        "Flow_Type": "Redfield",
+        "Request_Source": "WebTools16.0"
+      }
+    },
+    {
+      "type": "Microsoft.SignalRService/SignalR",
+      "apiVersion": "2018-10-01",
+      "name": "[parameters('SignalR_BlazorAppSandboxServerService_name')]",
+      "location": "japaneast",
+      "tags": {
+        "hidden-related:/providers/Microsoft.Web/sites/BlazorAppSandboxServer": "Azure__SignalR__ConnectionString"
+      },
+      "sku": {
+        "name": "Free_F1",
+        "tier": "Free",
+        "size": "F1",
+        "capacity": 1
+      },
+      "properties": {
+        "hostNamePrefix": "blazorappsandboxserverservice",
+        "features": [
+          {
+            "flag": "ServiceMode",
+            "value": "Default",
+            "properties": {}
+          },
+          {
+            "flag": "EnableConnectivityLogs",
+            "value": "True",
+            "properties": {}
+          }
+        ]
+      }
+    },
+    {
+      "type": "Microsoft.Web/serverfarms",
+      "apiVersion": "2018-02-01",
+      "name": "[parameters('serverfarms_BlazorAppSandboxServerPlan_name')]",
+      "location": "Japan East",
+      "sku": {
+        "name": "F1",
+        "tier": "Free",
+        "size": "F1",
+        "family": "F",
+        "capacity": 0
+      },
+      "kind": "app",
+      "properties": {
+        "perSiteScaling": false,
+        "maximumElasticWorkerCount": 1,
+        "isSpot": false,
+        "reserved": false,
+        "isXenon": false,
+        "hyperV": false,
+        "targetWorkerCount": 0,
+        "targetWorkerSizeId": 0
+      }
+    },
+    {
+      "type": "microsoft.alertsmanagement/smartdetectoralertrules",
+      "apiVersion": "2019-06-01",
+      "name": "[parameters('smartdetectoralertrules_failure_anomalies___blazorappsandboxserver_name')]",
+      "location": "global",
+      "dependsOn": [
+        "[resourceId('microsoft.insights/components', parameters('components_BlazorAppSandboxServer_name'))]"
+      ],
+      "properties": {
+        "description": "Failure Anomalies notifies you of an unusual rise in the rate of failed HTTP requests or dependency calls.",
+        "state": "Enabled",
+        "severity": "Sev3",
+        "frequency": "PT1M",
+        "detector": {
+          "id": "FailureAnomaliesDetector"
+        },
+        "scope": [
+          "[resourceId('microsoft.insights/components', parameters('components_BlazorAppSandboxServer_name'))]"
+        ],
+        "actionGroups": {
+          "groupIds": [
+            "[parameters('actiongroups_application_20insights_20smart_20detection_externalid')]"
+          ]
+        }
+      }
+    },
+    {
+      "type": "Microsoft.Web/sites",
+      "apiVersion": "2018-11-01",
+      "name": "[parameters('sites_BlazorAppSandboxServer_name')]",
+      "location": "Japan East",
+      "dependsOn": [
+        "[resourceId('Microsoft.Web/serverfarms', parameters('serverfarms_BlazorAppSandboxServerPlan_name'))]"
+      ],
+      "tags": {
+        "hidden-related:/subscriptions/902c2f70-8e50-4d9b-a2b2-4c285c48aad7/resourceGroups/BlazorSandbox/providers/Microsoft.Web/serverfarms/BlazorAppSandboxServerPlan": "empty"
+      },
+      "kind": "app",
+      "properties": {
+        "enabled": true,
+        "hostNameSslStates": [
+          {
+            "name": "blazorappsandboxserver.azurewebsites.net",
+            "sslState": "Disabled",
+            "hostType": "Standard"
+          },
+          {
+            "name": "blazorappsandboxserver.scm.azurewebsites.net",
+            "sslState": "Disabled",
+            "hostType": "Repository"
+          }
+        ],
+        "serverFarmId": "[resourceId('Microsoft.Web/serverfarms', parameters('serverfarms_BlazorAppSandboxServerPlan_name'))]",
+        "reserved": false,
+        "isXenon": false,
+        "hyperV": false,
+        "scmSiteAlsoStopped": false,
+        "clientAffinityEnabled": true,
+        "clientCertEnabled": false,
+        "hostNamesDisabled": false,
+        "containerSize": 0,
+        "dailyMemoryTimeQuota": 0,
+        "httpsOnly": true,
+        "redundancyMode": "None"
+      }
+    },
+    {
+      "type": "Microsoft.Web/sites/config",
+      "apiVersion": "2018-11-01",
+      "name": "[concat(parameters('sites_BlazorAppSandboxServer_name'), '/web')]",
+      "location": "Japan East",
+      "dependsOn": [
+        "[resourceId('Microsoft.Web/sites', parameters('sites_BlazorAppSandboxServer_name'))]"
+      ],
+      "tags": {
+        "hidden-related:/subscriptions/902c2f70-8e50-4d9b-a2b2-4c285c48aad7/resourceGroups/BlazorSandbox/providers/Microsoft.Web/serverfarms/BlazorAppSandboxServerPlan": "empty"
+      },
+      "properties": {
+        "numberOfWorkers": 1,
+        "defaultDocuments": [
+          "Default.htm",
+          "Default.html",
+          "Default.asp",
+          "index.htm",
+          "index.html",
+          "iisstart.htm",
+          "default.aspx",
+          "index.php",
+          "hostingstart.html"
+        ],
+        "netFrameworkVersion": "v4.0",
+        "phpVersion": "5.6",
+        "requestTracingEnabled": false,
+        "remoteDebuggingEnabled": false,
+        "remoteDebuggingVersion": "VS2019",
+        "httpLoggingEnabled": false,
+        "logsDirectorySizeLimit": 35,
+        "detailedErrorLoggingEnabled": false,
+        "publishingUsername": "$BlazorAppSandboxServer",
+        "scmType": "VSTSRM",
+        "use32BitWorkerProcess": true,
+        "webSocketsEnabled": false,
+        "alwaysOn": false,
+        "managedPipelineMode": "Integrated",
+        "virtualApplications": [
+          {
+            "virtualPath": "/",
+            "physicalPath": "site\\wwwroot",
+            "preloadEnabled": false
+          }
+        ],
+        "loadBalancing": "LeastRequests",
+        "experiments": {
+          "rampUpRules": []
+        },
+        "autoHealEnabled": false,
+        "localMySqlEnabled": false,
+        "ipSecurityRestrictions": [
+          {
+            "ipAddress": "Any",
+            "action": "Allow",
+            "priority": 1,
+            "name": "Allow all",
+            "description": "Allow all access"
+          }
+        ],
+        "scmIpSecurityRestrictions": [
+          {
+            "ipAddress": "Any",
+            "action": "Allow",
+            "priority": 1,
+            "name": "Allow all",
+            "description": "Allow all access"
+          }
+        ],
+        "scmIpSecurityRestrictionsUseMain": false,
+        "http20Enabled": false,
+        "minTlsVersion": "1.2",
+        "ftpsState": "AllAllowed",
+        "reservedInstanceCount": 0
+      }
+    },
+    {
+      "type": "Microsoft.Web/sites/deployments",
+      "apiVersion": "2018-11-01",
+      "name": "[concat(parameters('sites_BlazorAppSandboxServer_name'), '/101579222085666')]",
+      "location": "Japan East",
+      "dependsOn": [
+        "[resourceId('Microsoft.Web/sites', parameters('sites_BlazorAppSandboxServer_name'))]"
+      ],
+      "properties": {
+        "status": 4,
+        "author": "koudenpa",
+        "deployer": "VSTS",
+        "message": "{\"type\":\"Deployment\",\"commitId\":\"4d0406a753412bdb0838db08a9c5c337a419bedf\",\"buildId\":\"62\",\"releaseId\":\"10\",\"buildNumber\":\"20200117.4\",\"releaseName\":\"Release-10\",\"repoProvider\":\"GitHub\",\"repoName\":\"7474/bazor-app-sandbox\",\"collectionUrl\":\"https://koudenpa.visualstudio.com/\",\"teamProject\":\"5f08b9a1-5625-44c1-ae4d-42cbe514d07b\",\"buildProjectUrl\":\"https://koudenpa.visualstudio.com/5f08b9a1-5625-44c1-ae4d-42cbe514d07b\",\"repositoryUrl\":\"\",\"branch\":\"master\",\"teamProjectName\":\"bazor-app-sandbox\",\"slotName\":\"production\"}",
+        "start_time": "2020-01-17T00:48:06.4576588Z",
+        "end_time": "2020-01-17T00:48:06.4576588Z",
+        "active": false
+      }
+    },
+    {
+      "type": "Microsoft.Web/sites/deployments",
+      "apiVersion": "2018-11-01",
+      "name": "[concat(parameters('sites_BlazorAppSandboxServer_name'), '/111579222314684')]",
+      "location": "Japan East",
+      "dependsOn": [
+        "[resourceId('Microsoft.Web/sites', parameters('sites_BlazorAppSandboxServer_name'))]"
+      ],
+      "properties": {
+        "status": 4,
+        "author": "koudenpa",
+        "deployer": "VSTS",
+        "message": "{\"type\":\"Deployment\",\"commitId\":\"a46a3faeb564c349197e44585f7223b1224aa3bc\",\"buildId\":\"63\",\"releaseId\":\"11\",\"buildNumber\":\"20200117.5\",\"releaseName\":\"Release-11\",\"repoProvider\":\"GitHub\",\"repoName\":\"7474/bazor-app-sandbox\",\"collectionUrl\":\"https://koudenpa.visualstudio.com/\",\"teamProject\":\"5f08b9a1-5625-44c1-ae4d-42cbe514d07b\",\"buildProjectUrl\":\"https://koudenpa.visualstudio.com/5f08b9a1-5625-44c1-ae4d-42cbe514d07b\",\"repositoryUrl\":\"\",\"branch\":\"master\",\"teamProjectName\":\"bazor-app-sandbox\",\"slotName\":\"production\"}",
+        "start_time": "2020-01-17T00:51:55.4250615Z",
+        "end_time": "2020-01-17T00:51:55.4250615Z",
+        "active": false
+      }
+    },
+    {
+      "type": "Microsoft.Web/sites/deployments",
+      "apiVersion": "2018-11-01",
+      "name": "[concat(parameters('sites_BlazorAppSandboxServer_name'), '/121579223538069')]",
+      "location": "Japan East",
+      "dependsOn": [
+        "[resourceId('Microsoft.Web/sites', parameters('sites_BlazorAppSandboxServer_name'))]"
+      ],
+      "properties": {
+        "status": 4,
+        "author": "koudenpa",
+        "deployer": "VSTS",
+        "message": "{\"type\":\"Deployment\",\"commitId\":\"719d5ae3161efb9897abdf9d4fa40aecc39ea703\",\"buildId\":\"64\",\"releaseId\":\"12\",\"buildNumber\":\"20200117.6\",\"releaseName\":\"Release-12\",\"repoProvider\":\"GitHub\",\"repoName\":\"7474/bazor-app-sandbox\",\"collectionUrl\":\"https://koudenpa.visualstudio.com/\",\"teamProject\":\"5f08b9a1-5625-44c1-ae4d-42cbe514d07b\",\"buildProjectUrl\":\"https://koudenpa.visualstudio.com/5f08b9a1-5625-44c1-ae4d-42cbe514d07b\",\"repositoryUrl\":\"\",\"branch\":\"master\",\"teamProjectName\":\"bazor-app-sandbox\",\"slotName\":\"production\"}",
+        "start_time": "2020-01-17T01:12:18.8063834Z",
+        "end_time": "2020-01-17T01:12:18.8063834Z",
+        "active": false
+      }
+    },
+    {
+      "type": "Microsoft.Web/sites/deployments",
+      "apiVersion": "2018-11-01",
+      "name": "[concat(parameters('sites_BlazorAppSandboxServer_name'), '/131579237440798')]",
+      "location": "Japan East",
+      "dependsOn": [
+        "[resourceId('Microsoft.Web/sites', parameters('sites_BlazorAppSandboxServer_name'))]"
+      ],
+      "properties": {
+        "status": 4,
+        "author": "koudenpa",
+        "deployer": "VSTS",
+        "message": "{\"type\":\"Deployment\",\"commitId\":\"c42f9ca5c0fded96fca57f693894fae42a530091\",\"buildId\":\"65\",\"releaseId\":\"13\",\"buildNumber\":\"20200117.7\",\"releaseName\":\"Release-13\",\"repoProvider\":\"GitHub\",\"repoName\":\"7474/bazor-app-sandbox\",\"collectionUrl\":\"https://koudenpa.visualstudio.com/\",\"teamProject\":\"5f08b9a1-5625-44c1-ae4d-42cbe514d07b\",\"buildProjectUrl\":\"https://koudenpa.visualstudio.com/5f08b9a1-5625-44c1-ae4d-42cbe514d07b\",\"repositoryUrl\":\"\",\"branch\":\"master\",\"teamProjectName\":\"bazor-app-sandbox\",\"slotName\":\"production\"}",
+        "start_time": "2020-01-17T05:04:02.1365667Z",
+        "end_time": "2020-01-17T05:04:02.1365667Z",
+        "active": false
+      }
+    },
+    {
+      "type": "Microsoft.Web/sites/deployments",
+      "apiVersion": "2018-11-01",
+      "name": "[concat(parameters('sites_BlazorAppSandboxServer_name'), '/141579237629446')]",
+      "location": "Japan East",
+      "dependsOn": [
+        "[resourceId('Microsoft.Web/sites', parameters('sites_BlazorAppSandboxServer_name'))]"
+      ],
+      "properties": {
+        "status": 4,
+        "author": "koudenpa",
+        "deployer": "VSTS",
+        "message": "{\"type\":\"Deployment\",\"commitId\":\"97e14d1da7a24c6bcc5b4e112d751849321bb2b4\",\"buildId\":\"66\",\"releaseId\":\"14\",\"buildNumber\":\"20200117.8\",\"releaseName\":\"Release-14\",\"repoProvider\":\"GitHub\",\"repoName\":\"7474/bazor-app-sandbox\",\"collectionUrl\":\"https://koudenpa.visualstudio.com/\",\"teamProject\":\"5f08b9a1-5625-44c1-ae4d-42cbe514d07b\",\"buildProjectUrl\":\"https://koudenpa.visualstudio.com/5f08b9a1-5625-44c1-ae4d-42cbe514d07b\",\"repositoryUrl\":\"\",\"branch\":\"master\",\"teamProjectName\":\"bazor-app-sandbox\",\"slotName\":\"production\"}",
+        "start_time": "2020-01-17T05:07:10.0506088Z",
+        "end_time": "2020-01-17T05:07:10.0506088Z",
+        "active": false
+      }
+    },
+    {
+      "type": "Microsoft.Web/sites/deployments",
+      "apiVersion": "2018-11-01",
+      "name": "[concat(parameters('sites_BlazorAppSandboxServer_name'), '/151579261923506')]",
+      "location": "Japan East",
+      "dependsOn": [
+        "[resourceId('Microsoft.Web/sites', parameters('sites_BlazorAppSandboxServer_name'))]"
+      ],
+      "properties": {
+        "status": 4,
+        "author": "koudenpa",
+        "deployer": "VSTS",
+        "message": "{\"type\":\"Deployment\",\"commitId\":\"7a227c11472bd68b2dbf90e492fd9c0fa25ea5f9\",\"buildId\":\"67\",\"releaseId\":\"15\",\"buildNumber\":\"20200117.9\",\"releaseName\":\"Release-15\",\"repoProvider\":\"GitHub\",\"repoName\":\"7474/bazor-app-sandbox\",\"collectionUrl\":\"https://koudenpa.visualstudio.com/\",\"teamProject\":\"5f08b9a1-5625-44c1-ae4d-42cbe514d07b\",\"buildProjectUrl\":\"https://koudenpa.visualstudio.com/5f08b9a1-5625-44c1-ae4d-42cbe514d07b\",\"repositoryUrl\":\"\",\"branch\":\"master\",\"teamProjectName\":\"bazor-app-sandbox\",\"slotName\":\"production\"}",
+        "start_time": "2020-01-17T11:52:04.8182407Z",
+        "end_time": "2020-01-17T11:52:04.8182407Z",
+        "active": false
+      }
+    },
+    {
+      "type": "Microsoft.Web/sites/deployments",
+      "apiVersion": "2018-11-01",
+      "name": "[concat(parameters('sites_BlazorAppSandboxServer_name'), '/161579357848552')]",
+      "location": "Japan East",
+      "dependsOn": [
+        "[resourceId('Microsoft.Web/sites', parameters('sites_BlazorAppSandboxServer_name'))]"
+      ],
+      "properties": {
+        "status": 4,
+        "author": "koudenpa",
+        "deployer": "VSTS",
+        "message": "{\"type\":\"Deployment\",\"commitId\":\"c4e33d0a00dde037d8a9acdd2a9f11a0a6785d91\",\"buildId\":\"68\",\"releaseId\":\"16\",\"buildNumber\":\"20200118.1\",\"releaseName\":\"Release-16\",\"repoProvider\":\"GitHub\",\"repoName\":\"7474/bazor-app-sandbox\",\"collectionUrl\":\"https://koudenpa.visualstudio.com/\",\"teamProject\":\"5f08b9a1-5625-44c1-ae4d-42cbe514d07b\",\"buildProjectUrl\":\"https://koudenpa.visualstudio.com/5f08b9a1-5625-44c1-ae4d-42cbe514d07b\",\"repositoryUrl\":\"\",\"branch\":\"master\",\"teamProjectName\":\"bazor-app-sandbox\",\"slotName\":\"production\"}",
+        "start_time": "2020-01-18T14:30:54.2739193Z",
+        "end_time": "2020-01-18T14:30:54.2739193Z",
+        "active": false
+      }
+    },
+    {
+      "type": "Microsoft.Web/sites/deployments",
+      "apiVersion": "2018-11-01",
+      "name": "[concat(parameters('sites_BlazorAppSandboxServer_name'), '/171579359124477')]",
+      "location": "Japan East",
+      "dependsOn": [
+        "[resourceId('Microsoft.Web/sites', parameters('sites_BlazorAppSandboxServer_name'))]"
+      ],
+      "properties": {
+        "status": 4,
+        "author": "koudenpa",
+        "deployer": "VSTS",
+        "message": "{\"type\":\"Deployment\",\"commitId\":\"f6b5515206fbbb491ab87321b7c39a630fb616d7\",\"buildId\":\"69\",\"releaseId\":\"17\",\"buildNumber\":\"20200118.2\",\"releaseName\":\"Release-17\",\"repoProvider\":\"GitHub\",\"repoName\":\"7474/bazor-app-sandbox\",\"collectionUrl\":\"https://koudenpa.visualstudio.com/\",\"teamProject\":\"5f08b9a1-5625-44c1-ae4d-42cbe514d07b\",\"buildProjectUrl\":\"https://koudenpa.visualstudio.com/5f08b9a1-5625-44c1-ae4d-42cbe514d07b\",\"repositoryUrl\":\"\",\"branch\":\"master\",\"teamProjectName\":\"bazor-app-sandbox\",\"slotName\":\"production\"}",
+        "start_time": "2020-01-18T14:52:05.2688904Z",
+        "end_time": "2020-01-18T14:52:05.2688904Z",
+        "active": false
+      }
+    },
+    {
+      "type": "Microsoft.Web/sites/deployments",
+      "apiVersion": "2018-11-01",
+      "name": "[concat(parameters('sites_BlazorAppSandboxServer_name'), '/181579359710854')]",
+      "location": "Japan East",
+      "dependsOn": [
+        "[resourceId('Microsoft.Web/sites', parameters('sites_BlazorAppSandboxServer_name'))]"
+      ],
+      "properties": {
+        "status": 4,
+        "author": "koudenpa",
+        "deployer": "VSTS",
+        "message": "{\"type\":\"Deployment\",\"commitId\":\"e7aaeca5933673bd92d8cd9f1f6f56f50da82a44\",\"buildId\":\"70\",\"releaseId\":\"18\",\"buildNumber\":\"20200118.3\",\"releaseName\":\"Release-18\",\"repoProvider\":\"GitHub\",\"repoName\":\"7474/bazor-app-sandbox\",\"collectionUrl\":\"https://koudenpa.visualstudio.com/\",\"teamProject\":\"5f08b9a1-5625-44c1-ae4d-42cbe514d07b\",\"buildProjectUrl\":\"https://koudenpa.visualstudio.com/5f08b9a1-5625-44c1-ae4d-42cbe514d07b\",\"repositoryUrl\":\"\",\"branch\":\"master\",\"teamProjectName\":\"bazor-app-sandbox\",\"slotName\":\"production\"}",
+        "start_time": "2020-01-18T15:01:51.6568784Z",
+        "end_time": "2020-01-18T15:01:51.6568784Z",
+        "active": true
+      }
+    },
+    {
+      "type": "Microsoft.Web/sites/deployments",
+      "apiVersion": "2018-11-01",
+      "name": "[concat(parameters('sites_BlazorAppSandboxServer_name'), '/91579221853256')]",
+      "location": "Japan East",
+      "dependsOn": [
+        "[resourceId('Microsoft.Web/sites', parameters('sites_BlazorAppSandboxServer_name'))]"
+      ],
+      "properties": {
+        "status": 4,
+        "author": "koudenpa",
+        "deployer": "VSTS",
+        "message": "{\"type\":\"Deployment\",\"commitId\":\"fa045472242dc790bfa6a08bd51194c8f4eef978\",\"buildId\":\"61\",\"releaseId\":\"9\",\"buildNumber\":\"20200117.3\",\"releaseName\":\"Release-9\",\"repoProvider\":\"GitHub\",\"repoName\":\"7474/bazor-app-sandbox\",\"collectionUrl\":\"https://koudenpa.visualstudio.com/\",\"teamProject\":\"5f08b9a1-5625-44c1-ae4d-42cbe514d07b\",\"buildProjectUrl\":\"https://koudenpa.visualstudio.com/5f08b9a1-5625-44c1-ae4d-42cbe514d07b\",\"repositoryUrl\":\"\",\"branch\":\"master\",\"teamProjectName\":\"bazor-app-sandbox\",\"slotName\":\"production\"}",
+        "start_time": "2020-01-17T00:44:14.6911066Z",
+        "end_time": "2020-01-17T00:44:14.6911066Z",
+        "active": false
+      }
+    },
+    {
+      "type": "Microsoft.Web/sites/hostNameBindings",
+      "apiVersion": "2018-11-01",
+      "name": "[concat(parameters('sites_BlazorAppSandboxServer_name'), '/', parameters('sites_BlazorAppSandboxServer_name'), '.azurewebsites.net')]",
+      "location": "Japan East",
+      "dependsOn": [
+        "[resourceId('Microsoft.Web/sites', parameters('sites_BlazorAppSandboxServer_name'))]"
+      ],
+      "properties": {
+        "siteName": "BlazorAppSandboxServer",
+        "hostNameType": "Verified"
+      }
+    }
+  ]
+}
